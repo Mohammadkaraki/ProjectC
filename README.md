@@ -305,33 +305,6 @@ python workflows/slide_translator.py tests/fixtures/sample_slide.pptx output.ppt
 
 ---
 
-## 📊 Evaluation Criteria Alignment
-
-### 30% - Workflow & Logic Clarity ✅
-- **Clear 6-step workflow** with well-defined responsibilities
-- **Modular architecture** with separation of concerns
-- **Comprehensive logging** at each step for transparency
-- **Professional code structure** with docstrings and comments
-
-### 30% - Technical Feasibility ✅
-- **Solves real problem:** RTL layout conversion via XML manipulation (not trivial)
-- **Production-ready:** Error handling, validation, logging
-- **Scalable design:** Modular components can be extended
-- **Functional MVP:** End-to-end working implementation
-
-### 20% - Communication & Structure ✅
-- **Detailed documentation:** README, WORKFLOW_EXPLANATION, code comments
-- **Clear architecture:** Easy to understand and navigate
-- **Professional presentation:** Well-organized codebase and UI
-
-### 20% - Creativity & Bonus Execution ✅
-- **Custom implementation:** Not just off-the-shelf tools
-- **Front-end UI (Bonus):** Project C homepage with feature tiles
-- **Context-aware AI:** Intelligent translation beyond word-for-word
-- **Professional polish:** Clean UI, error handling, progress tracking
-
----
-
 ## 🛠️ Configuration
 
 ### Environment Variables (.env)
@@ -424,26 +397,8 @@ docker logs -f slide-translator
 
 ### Known Limitations (MVP - Time Constrained)
 
-**⚠️ Important Note:**
+⚠️ **Important Note:**
 The current MVP achieves ~85-90% quality in the **output PowerPoint structure and formatting**. This is primarily due to time constraints in the 12-hour development window. Given more development time, these issues can be resolved to achieve 95%+ output quality.
-
-**Output Structure Issues:**
-- Some technical consulting terms may need refinement
-- Very complex custom layouts may require manual adjustment
-- Bullet count mismatches occasionally occur (handled with fallback logic)
-- Text box positioning may not be perfect in all cases
-- **Root cause:** Time-constrained MVP development
-- **Solution:** With more time - refined parsing logic, better error handling, advanced layout detection
-
-**Translation Quality:**
-- Context-aware translation performs well overall
-- Some industry-specific terminology needs fine-tuning
-- **With more time:** Custom terminology dictionary, translation memory
-
-**Scope:**
-- Currently handles single slides/small decks well
-- Image text not translated (no OCR implementation)
-- **With more time:** Batch processing, OCR integration, full deck support
 
 ### Future Improvements (Given More Time)
 
@@ -497,14 +452,11 @@ The current MVP achieves ~85-90% quality in the **output PowerPoint structure an
 ## 📈 Future Enhancements
 
 Post-MVP improvements:
-- [ ] Multi-slide support (translate entire decks)
-- [ ] Additional language pairs (Arabic-to-English, etc.)
-- [ ] Formatting preservation (bold, italics, colors)
 - [ ] Image and chart handling
 - [ ] Batch processing (multiple files)
 - [ ] Translation memory for consistency
 - [ ] User authentication and history
-- [ ] Cloud deployment (AWS, Azure, GCP)
+- [ ] Enhanced cloud deployment (Azure, GCP)
 
 ---
 
