@@ -2,7 +2,7 @@
 ## Technical Documentation & Workflow Explanation
 
 **Developer:** Mohammad
-**Deployment:** [creativeshowsite.com](http://creativeshowsite.com)
+**Deployment:** [creativeshowroom.site](https://creativeshowroom.site)
 **Technology Stack:** Python, Flask, React, OpenAI GPT-3.5-turbo, Docker, AWS
 
 ---
@@ -77,7 +77,7 @@ Output Slide (.pptx) - Ready for presentation
 
 ### Production Environment
 
-- **Live URL:** creativeshowsite.com
+- **Live URL:** creativeshowroom.site
 - **Cloud Provider:** AWS
 - **IP Type:** Static IP (Elastic IP)
 - **Containerization:** Docker
@@ -210,7 +210,7 @@ Output Slide (.pptx) - Ready for presentation
 - Docker containerization
 - AWS EC2 (Static IP)
 - CI/CD pipeline
-- Custom domain (creativeshowsite.com)
+- Custom domain (creativeshowroom.site)
 
 **Development:**
 - Modular architecture
@@ -229,5 +229,5 @@ This solution delivers a **production-ready, automated slide translation system*
 ---
 
 **Project Repository:** Available on request
-**Live Demo:** creativeshowsite.com
+**Live Demo:** creativeshowroom.site
 **Contact:** Mohammad Karaki 

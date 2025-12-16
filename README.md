@@ -9,7 +9,7 @@
 **Timeline:** 12-hour MVP development
 
 ### 🌐 Live Production Deployment
-- **Live URL:** [creativeshowsite.com](http://creativeshowsite.com)
+- **Live URL:** [creativeshowroom.site](https://creativeshowroom.site)
 - **Infrastructure:** AWS EC2 with Static IP (Elastic IP)
 - **Containerization:** Docker
 - **CI/CD:** Automated deployment pipeline
@@ -368,7 +368,7 @@ The application uses GPT-3.5-turbo by default. For higher quality translations, 
 ### Infrastructure Architecture
 
 ```
-User → creativeshowsite.com (AWS Route 53)
+User → creativeshowroom.site (AWS Route 53)
   ↓
 AWS Elastic IP (Static IP)
   ↓
@@ -393,7 +393,7 @@ OpenAI API (GPT-3.5-turbo)
 
 ✅ **AWS Infrastructure**
 - Static IP (Elastic IP) for reliability
-- Custom domain: creativeshowsite.com
+- Custom domain: creativeshowroom.site
 - Scalable EC2 instance
 
 ### Deploy with Docker

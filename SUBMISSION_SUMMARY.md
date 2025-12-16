@@ -2,7 +2,7 @@
 
 **Developer:** Mohammad
 **Submission Date:** December 2024
-**Live Demo:** [creativeshowsite.com](http://creativeshowsite.com)
+**Live Demo:** [creativeshowroom.site](https://creativeshowroom.site)
 **Timeline:** 12-hour MVP Development
 
 ---
@@ -92,7 +92,7 @@
    - Professional design with animations
 
 2. **Production Deployment (Bonus 2):**
-   - Live at creativeshowsite.com
+   - Live at creativeshowroom.site
    - AWS EC2 with Static IP (Elastic IP)
    - Docker containerization
    - CI/CD automated pipeline
@@ -203,7 +203,7 @@ With additional development time, these issues are **completely solvable**:
 ## 🚀 How to Test
 
 ### Option 1: Live Demo (Recommended)
-Visit [creativeshowsite.com](http://creativeshowsite.com)
+Visit [creativeshowroom.site](https://creativeshowroom.site)
 
 ### Option 2: Local Testing
 ```bash
@@ -244,7 +244,7 @@ docker run -p 5000:5000 -e OPENAI_API_KEY=your_key slide-translator
 
 ## 📞 Contact & Access
 
-**Live Demo:** [creativeshowsite.com](http://creativeshowsite.com)
+**Live Demo:** [creativeshowroom.site](https://creativeshowroom.site)
 **Developer:** Mohammad
 **Repository:** Included in submission
 **Deployment:** AWS EC2 with Docker + CI/CD
