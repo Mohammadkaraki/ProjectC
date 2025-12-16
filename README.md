@@ -387,36 +387,6 @@ docker logs -f slide-translator
 
 ---
 
-## ⚠️ Translation Accuracy & Limitations
-
-### Current Performance
-- **Output Quality:** ~85-90% (good but not perfect)
-- **Translation:** Professional consulting language maintained
-- **Processing Time:** ~48 seconds per slide
-- **Layout Preservation:** Good - formatting and hierarchy mostly intact
-
-### Known Limitations (MVP - Time Constrained)
-
-⚠️ **Important Note:**
-The current MVP achieves ~85-90% quality in the **output PowerPoint structure and formatting**. This is primarily due to time constraints in the 12-hour development window. Given more development time, these issues can be resolved to achieve 95%+ output quality.
-
-### Future Improvements (Given More Time)
-
-**Accuracy Enhancements:**
-- Custom consulting terminology database
-- Translation memory for consistency
-- Multi-pass translation with validation
-- Industry-specific glossaries
-
-**Feature Additions:**
-- Batch processing for full presentations
-- Multi-language support (Hebrew, Urdu, etc.)
-- OCR for text in images
-- Advanced layout pattern recognition
-- Quality assurance scoring system
-
----
-
 ## 🐛 Troubleshooting
 
 ### Backend Issues

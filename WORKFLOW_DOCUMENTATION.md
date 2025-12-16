@@ -148,15 +148,7 @@ Output Slide (.pptx) - Ready for presentation
 3. **Single language per slide** - No mixed English/Arabic
 4. **Font availability** - Arial used for universal Arabic support
 
-### Current Limitations
-1. **Translation Accuracy:** ~85-90% accuracy for consulting terminology
-   - *With more time:* Fine-tune prompts, add terminology glossary
-2. **Complex layouts:** May require manual adjustment for heavily customized slides
-   - *With more time:* Add layout detection and adaptive flipping
-3. **Image text:** Does not translate text within images
-   - *With more time:* Integrate OCR + translation for embedded images
-
-### Potential Improvements (Given More Time)
+### Potential Future Enhancements
 - Custom consulting terminology dictionary
 - Multi-language support (Hebrew, Urdu)
 - Batch processing for full presentations
@@ -182,13 +174,6 @@ Output Slide (.pptx) - Ready for presentation
 ✅ Formatting preservation (bold, fonts, sizes)
 ✅ Fast processing (<1 minute per slide)
 ✅ Production-ready deployment
-
-### Current Limitations (Time-Constrained MVP)
-
-⚠️ **Output Structure Quality: ~85-90%**
-- Translation quality is good, but **output PowerPoint structure** is not 100% perfect
-- Some technical terms may need refinement
-- **With more time:** These structural issues can be resolved to achieve 95%+ output quality
 
 ---
 
