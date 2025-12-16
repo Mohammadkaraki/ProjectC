@@ -1,0 +1,144 @@
+TRANSLATIONS FROM TEMPLATE.PPTX
+Total: 34 translations
+
+============================================================
+
+1. [bullet_group]
+   EN: [bullets: 1 items]
+   AR: [bullets: 1 items]
+       1. المتطلبات:
+
+2. [text_box]
+   EN: 4.5GWh+
+   AR: أكثر من 4.5 غيغاواط-ساعة
+
+3. [text_box]
+   EN: 7,163 MT+
+   AR: 7,163 طن+
+
+4. [text_box]
+   EN: Green energy generated
+   AR: الطاقة الخضراء المولَّدة
+
+5. [text_box]
+   EN: Displaced CO2e equivalent
+   AR: ما يعادل ثاني أكسيد الكربون المشرد
+
+6. [text_box]
+   EN: 1.6 million
+   AR: 1.6 مليون
+
+7. [text_box]
+   EN: Avoided diesel equivalent (Litres)
+   AR: تجنب ما يعادل الديزل (لتر)
+
+8. [text_box]
+   EN: A cleantech company offering businesses and households modular, scalable, clean, and reliable energy solutions in Africa
+   AR: شركة تكنولوجيا نظيفة تقدم للشركات والأسر حلول طاقة نظيفة وموثوقة قابلة للتوسيع والتجميع في أفريقيا"
+
+9. [bullet_group]
+   EN: [bullets: 1 items]
+   AR: [bullets: 1 items]
+       1. المتطلبات:
+
+10. [text_box]
+   EN: 80%
+   AR: "80%"
+
+11. [text_box]
+   EN: CO2 emission reduction
+   AR: تقليل انبعاثات ثاني أكسيد الكربون
+
+12. [text_box]
+   EN: 3 Million
+   AR: 3 مليون
+
+13. [text_box]
+   EN: CO2 avoided
+   AR: CO2 تجنب
+
+14. [text_box]
+   EN: A spin-off from the École Polytechnique Fédérale de Lausanne selectively converting cellulose & lignin into added-value chemical products in US
+   AR: شركة ناتجة عن الانفصال عن مدرسة بوليتيكنيك لوزان الفدرالية تحوّل السليلوز والليغنين انتقائيًا إلى منتجات كيميائية ذات قيمة مضافة في الولايات المتحدة.
+
+15. [bullet_group]
+   EN: [bullets: 1 items]
+   AR: [bullets: 1 items]
+       1. المتطلبات:
+
+16. [text_box]
+   EN: 250x
+   AR: 250 مرة
+
+17. [text_box]
+   EN: More efficient land use
+   AR: استخدام أرض أكثر كفاءة
+
+18. [text_box]
+   EN: 100%
+   AR: "٪100"
+
+19. [text_box]
+   EN: Traceable and reliable supply
+   AR: إمداد قابل للتتبع وموثوق به
+
+20. [text_box]
+   EN: A proprietary biomanufacturing platform producing high-value lipids for beauty, personal care, home care, and food industries
+   AR: منصة تصنيع حيوي مملوكة تنتج دهون عالية القيمة لصناعات الجمال والعناية الشخصية والعناية بالمنزل والغذاء.
+
+21. [text_box]
+   EN: USD 12 Mn
+   AR: 12 مليون دولار أمريكي
+
+22. [text_box]
+   EN: Total investment raised
+   AR: إجمالي الاستثمارات المجمعة
+
+23. [text_box]
+   EN: 3
+   AR: "3"
+
+24. [text_box]
+   EN: Rounds of investment
+   AR: جولات استثمارية
+
+25. [text_box]
+   EN: USD 7 Mn
+   AR: 7 مليون دولار أمريكي
+
+26. [text_box]
+   EN: Total investment raised
+   AR: الاستثمار الإجمالي المجموع
+
+27. [text_box]
+   EN: 22
+   AR: "22"
+
+28. [text_box]
+   EN: Rounds of investment
+   AR: جولات الاستثمار
+
+29. [text_box]
+   EN: USD 33.5 Mn
+   AR: 33.5 مليون دولار أمريكي
+
+30. [text_box]
+   EN: Total investment raised
+   AR: الاستثمار الإجمالي المجموع
+
+31. [text_box]
+   EN: 8
+   AR: "8"
+
+32. [text_box]
+   EN: Rounds of investment
+   AR: جولات الاستثمار
+
+33. [text_box]
+   EN: Opportunity Overview
+   AR: نظرة عامة على الفرصة
+
+34. [text_box]
+   EN: Several companies were assessed on both their technological and financial achievements
+   AR: تم تقييم عدة شركات استنادًا إلى إنجازاتها التكنولوجية والمالية.
+

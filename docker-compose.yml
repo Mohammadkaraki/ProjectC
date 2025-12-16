@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: slide-translator-backend:latest
+    container_name: slide-translator-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_MODEL=${OPENAI_MODEL:-gpt-3.5-turbo}
+      - TRANSLATION_TEMPERATURE=${TRANSLATION_TEMPERATURE:-0.3}
+      - MAX_TOKENS=${MAX_TOKENS:-2000}
+      - FLASK_ENV=${FLASK_ENV:-production}
+      - FLASK_DEBUG=${FLASK_DEBUG:-False}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+    volumes:
+      - ./backend/tmp:/app/tmp
+    networks:
+      - slide-translator-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:5000/api/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: slide-translator-frontend:latest
+    container_name: slide-translator-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - slide-translator-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+
+networks:
+  slide-translator-network:
+    driver: bridge
+
+volumes:
+  backend-tmp:

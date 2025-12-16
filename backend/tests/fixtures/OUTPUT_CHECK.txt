@@ -1,0 +1,49 @@
+CHECKING FINAL OUTPUT SLIDE
+
+1. [ARABIC]
+   الطاقة الخضراء المولَّدة
+
+2. [ARABIC]
+   ما يعادل ثاني أكسيد الكربون المشرد
+
+3. [ARABIC]
+   تقليل انبعاثات ثاني أكسيد الكربون
+
+4. [ARABIC]
+   3 مليون
+
+5. [ARABIC]
+   CO2 تجنب
+
+6. [ARABIC]
+   شركة ناتجة عن الانفصال عن مدرسة بوليتيكنيك لوزان الفدرالية تحوّل السليلوز والليغنين انتقائيًا إلى منتجات كيميائية ذات قيمة مضافة في الولايات المتحدة.
+
+7. [ARABIC]
+   استخدام أرض أكثر كفاءة
+
+8. [ARABIC]
+   "٪100"
+
+9. [ARABIC]
+   إمداد قابل للتتبع وموثوق به
+
+10. [ARABIC]
+   منصة تصنيع حيوي مملوكة تنتج دهون عالية القيمة لصناعات الجمال والعناية الشخصية والعناية بالمنزل والغذاء.
+
+11. [ARABIC]
+   جولات استثمارية
+
+12. [ARABIC]
+   7 مليون دولار أمريكي
+
+13. [ENGLISH]
+   Opportunity Overview
+
+14. [ENGLISH]
+   Several companies were assessed on both their technological and financial achievements
+
+
+=== SUMMARY ===
+Total text shapes: 14
+Arabic: 12
+English: 2

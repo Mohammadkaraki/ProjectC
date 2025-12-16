@@ -1,0 +1,7 @@
+All text in TRANSLATED layout:
+[ARABIC] انقر لتحرير نمط العنوان الرئيسي
+[ARABIC] "نظرة عامة"
+[NOT TRANSLATED] Recommendation 
+[ARABIC] التأثير
+[ARABIC] "مخاطر"
+[ARABIC] "تحليل"

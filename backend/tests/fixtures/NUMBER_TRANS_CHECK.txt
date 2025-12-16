@@ -1,0 +1,9 @@
+NUMBER TRANSLATIONS CHECK
+
+shape_2: "7,163 MT+" => "أكثر من 4.5 غيغاواط-ساعة"
+shape_9: "80%" => "[NO TRANSLATION]"
+shape_11: "3 Million" => "[NO TRANSLATION]"
+shape_17: "100%" => "[NO TRANSLATION]"
+shape_22: "3" => ""٪100""
+shape_26: "22" => "12 مليون دولار أمريكي"
+shape_30: "8" => "7 مليون دولار أمريكي"

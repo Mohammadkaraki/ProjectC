@@ -1,0 +1,123 @@
+2. General Expectations
+You have 12 hours to complete this case study. Your objective is to build an MVP version of the feature assigned to you. The scope is intentionally flexible to allow you to shape the solution based on your strengths, preferred tools, and creative direction.
+You are encouraged to use workflow-automation tools such as Langflow, n8n, or similar platforms as a starting point for structuring your feature. However, you are also free to go beyond these tools and build custom logic, UI components, automations, or lightweight code if you prefer. Any architecture or implementation approach is acceptable, as long as it results in a functional workflow.
+You have full freedom to define the workflow steps, logic progression, and output format of your solution. Your implementation may focus on functionality, clarity, and effectiveness. While creative enhancements are welcome, simplicity is perfectly acceptable as long as the feature works reliably.
+Lastly, JavaScript or Python are suggested as the primary backend languages, if a localized platform is developed, though this is not a requirement.
+3. Feature-Specific Assignment – Slide Translator (Context-Aware RTL Translation)
+Feature Description
+This feature focuses on automating the translation of consulting slides while preserving their structure, layout, and logical flow. In consulting environments, slides are often translated between languages that follow different reading directions (for example, English to Arabic). This is not a simple text translation problem: the slide must be contextually translated, visually flipped, and structurally preserved.
+Your task is to build an MVP workflow that takes an existing PowerPoint slide, understands the content and structure of that slide, translates the text using a Large Language Model (LLM), and then converts the slide layout from left-to-right (LTR) to right-to-left (RTL) using PowerPoint’s right-to-left layout capabilities.
+This case tests your ability to combine document parsing, contextual understanding, LLM-based translation, and slide-level automation.
+What This Feature Is Solving
+When consultants translate slides manually, they typically need to:
+• Read and understand the context of the slide
+• Translate headers, titles, and bullet points accurately
+• Maintain the hierarchy and meaning of the content
+• Flip the entire slide layout from left-to-right to right-to-left
+• Ensure text boxes, bullet order, and alignment are correctly mirrored
+This feature automates those steps into a repeatable workflow.
+Input Provided for This Case
+You will be provided with a sample PowerPoint slide that includes:
+• A slide title
+• A header or key message
+• Multiple bullet points
+• Optional sub-bullets or supporting text
+The slide will be written in English and follow a standard left-to-right consulting layout.
+You may assume the slide structure is clean and does not require complex design manipulation beyond flipping and text replacement.
+Workflow Requirements (Step-by-Step)
+Your workflow must perform the following steps in sequence.
+1. Slide Ingestion and Parsing
+The workflow must ingest the PowerPoint slide and extract:
+• Slide title text
+• Header or key message text
+• All body text elements (bullets, sub-bullets, notes if present)
+• The order in which these elements appear on the slide
+At this stage, the workflow should build a structured representation of the slide content, for example:
+• Title
+• Header
+• Bullet 1
+• Bullet 2
+• Bullet 3
+This structure will be used to preserve meaning and hierarchy during translation.
+2. Context Understanding
+Before translation, the workflow must identify the role of each text element, such as:
+• Title vs header vs supporting bullet
+• Main points vs sub-points
+This ensures that the LLM translates content in context, rather than as isolated text fragments.
+For example, a slide title should be translated differently than a supporting bullet, even if similar words are used.
+3. LLM-Based Translation
+Using an LLM of your choice, the workflow must translate all extracted text from English into a right-to-left language (e.g., Arabic).
+The translation must:
+• Preserve the original meaning
+• Maintain professional, consulting-appropriate language
+• Respect the hierarchy of the slide (title, header, bullets)
+You may translate text element-by-element or in a single structured prompt, as long as the output preserves alignment with the original structure.
+4. Slide Layout Flip (Left-to-Right → Right-to-Left)
+After translation, the workflow must modify the slide layout to support right-to-left reading.
+This includes:
+• Flipping the slide layout from left-to-right to right-to-left
+• Reordering bullets so they appear in the correct RTL sequence
+• Adjusting text alignment where necessary
+You are expected to use PowerPoint’s built-in right-to-left slide layout or flip functionality, such as a macro or automation step that mirrors the slide content.
+You do not need to redesign the slide; the goal is structural flipping, not visual redesign.
+5. Text Replacement
+Once the slide is flipped, the workflow must:
+• Replace the original English text with the translated RTL text
+• Ensure each translated element is placed in the correct position
+• Preserve the original structure of the slide
+For example:
+• The translated title appears in the title placeholder
+• Translated bullets appear in the corresponding bullet placeholders
+• The order of points matches RTL reading flow
+6. Final Output Generation
+The workflow must output a new translated PowerPoint slide that:
+• Contains translated text
+• Uses a right-to-left layout
+• Maintains the original slide structure and hierarchy
+The output slide should be ready for use in a consulting presentation without additional manual adjustment.
+Implementation Guidance (Suggestion)
+You may choose any reasonable approach to implement this workflow, for example:
+• Parsing slides using a PowerPoint manipulation library
+• Calling an LLM API for translation
+• Using a PowerPoint macro or automation step to flip the slide to RTL
+• Running the workflow locally or in an online environment
+The key expectation is that the workflow demonstrates end-to-end automation of translation and layout flipping.
+Final Output Requirements
+Your final deliverables must include:
+• The original input slide
+• The translated, right-to-left output slide
+• A short explanation of how your workflow parses, translates, and flips the slide
+The output must be a PowerPoint slide file.
+4. Submission Requirements
+To ensure your feature can be reviewed consistently, please include the following:
+1.
+Workflow Access (unless workflow developed through code): Provide a way to view or run your workflow (e.g., Langflow, n8n).
+2.
+Logic Explanation: A short summary of your approach, workflow steps, and assumptions (slides, PDF, or text notes).
+3.
+Code Access (If Applicable): If you built a localized program or UI, include a GitHub link or ZIP file.
+4.
+Optional (Not Required): A simple architecture or flow diagram, if helpful.
+5. Evaluation Criteria
+Your submission will be evaluated using the following scoring rubric, applied consistently across all candidates:
+30% — Workflow & Logic Clarity
+How clearly you structured the workflow, how the steps connect, and how well the solution reflects consulting-style reasoning.
+30% — Technical Feasibility
+Whether the feature runs reliably, uses reasonable assumptions, and could realistically be leveraged by a consultant
+20% — Communication & Structure
+Clarity of explanation, organization of your documentation, and how effectively you present your decisions.
+20% — Creativity & Bonus Execution
+Any added value beyond the basics: a simple UI, thoughtful workflow enhancements, extra features, or polished interactions.
+6. Bonus Contribution
+Candidates may earn additional credit by completing one or both of the following optional extensions:
+1. Localized Version of the Feature
+Building a localized or standalone version of your feature (e.g., a packaged workflow, mini-application, or self-contained script/UI) that can operate independently of the main environment.
+2. Draft Front-End for Project C
+Developing a simple user interface that represents the Project C home page. This UI should:
+•
+Display a centralized list of features (including placeholder/dummy features)
+•
+Highlight your assigned feature
+•
+Launch your workflow when your feature tile/button is selected
+This bonus is optional and will be considered as part of the “Creativity & Bonus Execution” score

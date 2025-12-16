@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slide Translator - Project C</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <a href="index.html" class="back-link">← Back to Project C</a>
+            <h1>🌐 Slide Translator</h1>
+            <p class="subtitle">Context-Aware RTL Translation for Consulting Slides</p>
+        </header>
+
+        <main class="translator-main">
+            <div class="info-section">
+                <h2>How It Works</h2>
+                <div class="workflow-steps">
+                    <div class="step">
+                        <span class="step-number">1</span>
+                        <div>
+                            <h4>Parse Slide</h4>
+                            <p>Extract titles, headers, and bullets</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">2</span>
+                        <div>
+                            <h4>Understand Context</h4>
+                            <p>Identify element roles and hierarchy</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">3</span>
+                        <div>
+                            <h4>AI Translation</h4>
+                            <p>GPT-4 translates English to Arabic</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">4</span>
+                        <div>
+                            <h4>RTL Conversion</h4>
+                            <p>Flip layout from LTR to RTL</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">5</span>
+                        <div>
+                            <h4>Generate Output</h4>
+                            <p>Create translated PowerPoint file</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="upload-section">
+                <h2>Upload Your Slide</h2>
+                <p>Upload a PowerPoint or PDF file (.pptx or .pdf) to translate from English to Arabic with RTL layout</p>
+
+                <div id="dropzone" class="dropzone">
+                    <div class="dropzone-content">
+                        <div class="upload-icon">📁</div>
+                        <p class="dropzone-text">Drag & drop your .pptx or .pdf file here</p>
+                        <p class="dropzone-subtext">or</p>
+                        <label for="fileInput" class="btn-upload">Choose File</label>
+                        <input type="file" id="fileInput" accept=".pptx,.pdf" style="display: none;">
+                        <p class="file-requirements">Max size: 16 MB • .pptx or .pdf</p>
+                    </div>
+                </div>
+
+                <div id="fileInfo" class="file-info" style="display: none;">
+                    <p><strong>Selected File:</strong> <span id="fileName"></span></p>
+                    <p><strong>Size:</strong> <span id="fileSize"></span></p>
+                </div>
+
+                <button id="translateBtn" class="btn-primary btn-large" style="display: none;" disabled>
+                    Translate Slide
+                </button>
+
+                <div id="progressSection" class="progress-section" style="display: none;">
+                    <h3>Translation in Progress...</h3>
+                    <div class="progress-bar">
+                        <div id="progressFill" class="progress-fill"></div>
+                    </div>
+                    <p id="progressText" class="progress-text">Initializing...</p>
+                </div>
+
+                <div id="resultSection" class="result-section" style="display: none;">
+                    <div class="success-message">
+                        <h3>✓ Translation Complete!</h3>
+                        <p>Your slide has been successfully translated to Arabic with RTL layout.</p>
+                    </div>
+                    <a id="downloadLink" class="btn-download" download="translated_slide.pptx">
+                        Download Translated Slide
+                    </a>
+                    <button id="translateAnotherBtn" class="btn-secondary">
+                        Translate Another Slide
+                    </button>
+                </div>
+
+                <div id="errorSection" class="error-section" style="display: none;">
+                    <div class="error-message">
+                        <h3>⚠️ Translation Failed</h3>
+                        <p id="errorText">An error occurred during translation.</p>
+                    </div>
+                    <button id="retryBtn" class="btn-secondary">
+                        Try Again
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2024 Project C - Slide Translator Feature</p>
+        </footer>
+    </div>
+
+    <script src="translator.js"></script>
+</body>
+</html>

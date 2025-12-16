@@ -1,0 +1,5 @@
+Arabic text: المتطلبات:
+  Margins: L=0.030 R=0.030
+  Word wrap: True
+  Auto-size: TEXT_TO_FIT_SHAPE (2)
+

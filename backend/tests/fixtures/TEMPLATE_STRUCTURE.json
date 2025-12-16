@@ -1,0 +1,466 @@
+2025-12-16 17:33:14 - modules.slide_parser - INFO - Parsing PowerPoint file: tests/fixtures/Template.pptx
+2025-12-16 17:33:14 - modules.slide_parser - INFO - Extracted 34 elements from slide
+{
+  "slide_index": 0,
+  "slide_width": 12192000,
+  "slide_height": 6858000,
+  "elements": [
+    {
+      "element_id": "shape_0",
+      "type": "bullet_group",
+      "bullets": [
+        {
+          "text": "...",
+          "level": 0,
+          "index": 1
+        }
+      ],
+      "shape_id": 72,
+      "position": {
+        "left": 764187,
+        "top": 1710222,
+        "width": 10100483,
+        "height": 1338857
+      }
+    },
+    {
+      "element_id": "shape_1",
+      "type": "text_box",
+      "text": "4.5GWh+",
+      "shape_id": 76,
+      "position": {
+        "left": 946842,
+        "top": 3040291,
+        "width": 914400,
+        "height": 914400
+      },
+      "level": 0
+    },
+    {
+      "element_id": "shape_2",
+      "type": "text_box",
+      "text": "7,163 MT+",
+      "shape_id": 77,
+      "position": {
+        "left": 946842,
+        "top": 4057569,
+        "width": 914400,
+        "height": 914400
+      },
+      "level": 0
+    },
+    {
+      "element_id": "shape_3",
+      "type": "text_box",
+      "text": "Green energy generated",
+      "shape_id": 78,
+      "position": {
+        "left": 1861241,
+        "top": 3254951,
+        "width": 2040051,
+        "height": 482595
+      },
+      "level": 0
+    },
+    {
+      "element_id": "shape_4",
+      "type": "text_box",
+      "text": "Displaced CO2e equivalent",
+      "shape_id": 79,
+      "position": {
+        "left": 1861241,
+        "top": 4273471,
+        "width": 2040051,
+        "height": 482595
+      },
+      "level": 0
+    },
+    {
+      "element_id": "shape_5",
+      "type": "text_box",
+      "text": "1.6 million",
+      "shape_id": 80,
+      "position": {
+        "left": 946842,
+        "top": 5074847,
+        "width": 914400,
+        "height": 914400
+      },
+      "level": 0
+    },
+    {
+      "element_id": "shape_6",
+      "type": "text_box",
+      "text": "Avoided diesel equivalent (Litres)",
+      "shape_id": 81,
+      "position": {
+        "left": 1861241,
+        "top": 5290749,
+        "width": 2040051,
+        "height": 482595
+      },
+      "level": 0
+    },
+    {
+      "element_id": "shape_7",
+      "type": "text_box",
+      "text": "A cleantech company offering businesses and households modular, scalable, clean, and reliable energy solutions in Africa",
+      "shape_id": 82,
+      "position": {
+        "left": 2672298,
+        "top": 1710222,
+        "width": 2572666,
+        "height": 1338857
+      },
+      "level": 0
+    },
+    {
+      "element_id": "shape_8",
+      "type": "bullet_group",
+      "bullets": [
+        {
+          "text": "...",
+          "level": 0,
+          "index": 1
+        }
+      ],
+      "shape_id": 84,
+      "position": {
+        "left": 764187,
+        "top": 3208438,
+        "width": 10100483,
+        "height": 1338857
+      }
+    },
+    {
+      "element_id": "shape_9",
+      "type": "text_box",
+      "text": "80%",
+      "shape_id": 91,
+      "position": {
+        "left": 5156047,
+        "top": 3428742,
+        "width": 796238,
+        "height": 585739
+      },
+      "level": 0
+    },
+    {
+      "element_id": "shape_10",
+      "type": "text_box",
+      "text": "CO2 emission reduction",
+      "shape_id": 92,
+      "position": {
+        "left": 5952284,
+        "top": 3566247,
+        "width": 1776429,
+        "height": 309137
+      },
+      "level": 0
+    },
+    {
+      "element_id": "shape_11",
+      "type": "text_box",
+      "text": "3 Million",
+      "shape_id": 89,
+      "position": {
+        "left": 5156047,
+        "top": 4080381,
+        "width": 796238,
+        "height": 585739
+      },
+      "level": 0
+    },
+    {
+      "element_id": "shape_12",
+      "type": "text_box",
+      "text": "CO2 avoided",
+      "shape_id": 90,
+      "position": {
+        "left": 5952284,
+        "top": 4218683,
+        "width": 1776429,
+        "height": 309137
+      },
+      "level": 0
+    },
+    {
+      "element_id": "shape_13",
+      "type": "text_box",
+      "text": "A spin-off from the École Polytechnique Fédérale de Lausanne selectively converting cellulose & lignin into added-value chemical products in US",
+      "shape_id": 93,
+      "position": {
+        "left": 2672298,
+        "top": 3208438,
+        "width": 2572666,
+        "height": 1338857
+      },
+      "level": 0
+    },
+    {
+      "element_id": "shape_14",
+      "type": "bullet_group",
+      "bullets": [
+        {
+          "text": "...",
+          "level": 0,
+          "index": 1
+        }
+      ],
+      "shape_id": 95,
+      "position": {
+        "left": 764187,
+        "top": 4706654,
+        "width": 10100483,
+        "height": 1338857
+      }
+    },
+    {
+      "element_id": "shape_15",
+      "type": "text_box",
+      "text": "250x",
+      "shape_id": 102,
+      "position": {
+        "left": 5156047,
+        "top": 4926958,
+        "width": 796238,
+        "height": 585739
+      },
+      "level": 0
+    },
+    {
+      "element_id": "shape_16",
+      "type": "text_box",
+      "text": "More efficient land use",
+      "shape_id": 103,
+      "position": {
+        "left": 5952284,
+        "top": 5064463,
+        "width": 1776429,
+        "height": 309136
+      },
+      "level": 0
+    },
+    {
+      "element_id": "shape_17",
+      "type": "text_box",
+      "text": "100%",
+      "shape_id": 100,
+      "position": {
+        "left": 5156047,
+        "top": 5578597,
+        "width": 796238,
+        "height": 585739
+      },
+      "level": 0
+    },
+    {
+      "element_id": "shape_18",
+      "type": "text_box",
+      "text": "Traceable and reliable supply",
+      "shape_id": 101,
+      "position": {
+        "left": 5952284,
+        "top": 5716899,
+        "width": 1776429,
+        "height": 309136
+      },
+      "level": 0
+    },
+    {
+      "element_id": "shape_19",
+      "type": "text_box",
+      "text": "A proprietary biomanufacturing platform producing high-value lipids for beauty, personal care, home care, and food industries",
+      "shape_id": 104,
+      "position": {
+        "left": 2672298,
+        "top": 4706654,
+        "width": 2572666,
+        "height": 1338857
+      },
+      "level": 0
+    },
+    {
+      "element_id": "shape_20",
+      "type": "text_box",
+      "text": "USD 12 Mn",
+      "shape_id": 113,
+      "position": {
+        "left": 5156047,
+        "top": 3428742,
+        "width": 796238,
+        "height": 585739
+      },
+      "level": 0
+    },
+    {
+      "element_id": "shape_21",
+      "type": "text_box",
+      "text": "Total investment raised",
+      "shape_id": 114,
+      "position": {
+        "left": 5952284,
+        "top": 3566247,
+        "width": 1776429,
+        "height": 309137
+      },
+      "level": 0
+    },
+    {
+      "element_id": "shape_22",
+      "type": "text_box",
+      "text": "3",
+      "shape_id": 111,
+      "position": {
+        "left": 5156047,
+        "top": 4080381,
+        "width": 796238,
+        "height": 585739
+      },
+      "level": 0
+    },
+    {
+      "element_id": "shape_23",
+      "type": "text_box",
+      "text": "Rounds of investment",
+      "shape_id": 112,
+      "position": {
+        "left": 5952284,
+        "top": 4218683,
+        "width": 1776429,
+        "height": 309137
+      },
+      "level": 0
+    },
+    {
+      "element_id": "shape_24",
+      "type": "text_box",
+      "text": "USD 7 Mn",
+      "shape_id": 120,
+      "position": {
+        "left": 5156047,
+        "top": 3428742,
+        "width": 796238,
+        "height": 585739
+      },
+      "level": 0
+    },
+    {
+      "element_id": "shape_25",
+      "type": "text_box",
+      "text": "Total investment raised",
+      "shape_id": 121,
+      "position": {
+        "left": 5952284,
+        "top": 3566247,
+        "width": 1776429,
+        "height": 309137
+      },
+      "level": 0
+    },
+    {
+      "element_id": "shape_26",
+      "type": "text_box",
+      "text": "22",
+      "shape_id": 118,
+      "position": {
+        "left": 5156047,
+        "top": 4080381,
+        "width": 796238,
+        "height": 585739
+      },
+      "level": 0
+    },
+    {
+      "element_id": "shape_27",
+      "type": "text_box",
+      "text": "Rounds of investment",
+      "shape_id": 119,
+      "position": {
+        "left": 5952284,
+        "top": 4218683,
+        "width": 1776429,
+        "height": 309137
+      },
+      "level": 0
+    },
+    {
+      "element_id": "shape_28",
+      "type": "text_box",
+      "text": "USD 33.5 Mn",
+      "shape_id": 127,
+      "position": {
+        "left": 5156047,
+        "top": 3428742,
+        "width": 796238,
+        "height": 585739
+      },
+      "level": 0
+    },
+    {
+      "element_id": "shape_29",
+      "type": "text_box",
+      "text": "Total investment raised",
+      "shape_id": 128,
+      "position": {
+        "left": 5952284,
+        "top": 3566247,
+        "width": 1776429,
+        "height": 309137
+      },
+      "level": 0
+    },
+    {
+      "element_id": "shape_30",
+      "type": "text_box",
+      "text": "8",
+      "shape_id": 125,
+      "position": {
+        "left": 5156047,
+        "top": 4080381,
+        "width": 796238,
+        "height": 585739
+      },
+      "level": 0
+    },
+    {
+      "element_id": "shape_31",
+      "type": "text_box",
+      "text": "Rounds of investment",
+      "shape_id": 126,
+      "position": {
+        "left": 5952284,
+        "top": 4218683,
+        "width": 1776429,
+        "height": 309137
+      },
+      "level": 0
+    },
+    {
+      "element_id": "shape_32",
+      "type": "text_box",
+      "text": "Opportunity Overview",
+      "shape_id": 130,
+      "position": {
+        "left": 542260,
+        "top": 908050,
+        "width": 4159135,
+        "height": 240246
+      },
+      "level": 0
+    },
+    {
+      "element_id": "shape_33",
+      "type": "text_box",
+      "text": "Several companies were assessed on both their technological and financial achievements",
+      "shape_id": 132,
+      "position": {
+        "left": 542260,
+        "top": 7867,
+        "width": 9254884,
+        "height": 900184
+      },
+      "level": 0
+    }
+  ]
+}

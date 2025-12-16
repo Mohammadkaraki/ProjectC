@@ -1,0 +1,8 @@
+NUMBER TRANSLATIONS CHECK
+
+shape_9: "80%" => ""80%""
+shape_11: "3 Million" => ""3 مليون""
+shape_17: "100%" => ""٪100""
+shape_22: "3" => ""3""
+shape_26: "22" => ""22""
+shape_30: "8" => ""8""
