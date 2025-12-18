@@ -1,7 +1,10 @@
 // Slide Translator JavaScript
 // Handles file upload, API communication, and progress tracking
 
-const API_URL = 'http://localhost:5000/api/translate-slide';
+// Auto-detect environment: localhost vs production
+const API_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+    ? 'http://localhost:5000/api/translate-slide'  // Local: Direct to Flask
+    : '/api/translate-slide';                        // Production: Via nginx proxy
 
 // DOM Elements
 const dropzone = document.getElementById('dropzone');
@@ -64,11 +67,11 @@ retryBtn.addEventListener('click', resetUploader);
 // Handle file selection
 function handleFileSelect(file) {
     // Validate file type
-    const validExtensions = ['.pptx', '.pdf'];
+    const validExtensions = ['.pptx'];
     const fileExt = file.name.toLowerCase().slice(file.name.lastIndexOf('.'));
 
     if (!validExtensions.includes(fileExt)) {
-        alert('Please select a .pptx or .pdf file');
+        alert('Please select a .pptx file');
         return;
     }
 

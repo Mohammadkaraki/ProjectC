@@ -15,7 +15,6 @@ from config import Config
 from utils.logger import setup_logger
 from utils.file_handler import is_allowed_file, save_uploaded_file, get_output_path
 from workflows.translate_all_slides import translate_all_slides
-from modules.pdf_converter import convert_pdf_to_pptx, is_pdf_file
 
 # Setup logger
 logger = setup_logger(__name__)
@@ -77,27 +76,13 @@ def translate_slide():
         # Validate file extension
         if not is_allowed_file(file.filename):
             logger.warning(f"Invalid file type: {file.filename}")
-            return jsonify({'error': 'Only .pptx and .pdf files are allowed'}), 400
+            return jsonify({'error': 'Only .pptx files are allowed'}), 400
 
         logger.info(f"Received file: {file.filename}")
 
         # Save uploaded file
         file_id, input_path = save_uploaded_file(file, file.filename)
         output_path = get_output_path(file_id)
-
-        # Check if PDF file - convert to PPTX first
-        if is_pdf_file(file.filename):
-            logger.info("PDF file detected. Converting to PowerPoint...")
-            try:
-                pptx_path = input_path.replace('.pdf', '_converted.pptx')
-                input_path = convert_pdf_to_pptx(input_path, pptx_path)
-                logger.info(f"PDF converted to PPTX: {pptx_path}")
-            except Exception as e:
-                logger.error(f"PDF conversion failed: {str(e)}")
-                return jsonify({
-                    'error': 'PDF conversion failed',
-                    'message': 'Could not convert PDF to PowerPoint. Please ensure the PDF is not corrupted.'
-                }), 400
 
         logger.info(f"Starting translation workflow for file_id: {file_id}")
 

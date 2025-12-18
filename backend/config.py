@@ -38,7 +38,7 @@ class Config:
     TARGET_LANGUAGE = "Arabic"
 
     # Supported file types
-    ALLOWED_EXTENSIONS = {'.pptx', '.pdf'}
+    ALLOWED_EXTENSIONS = {'.pptx'}
 
     # Arabic Font Settings
     ARABIC_FONT = "Arial"  # Universally supported
