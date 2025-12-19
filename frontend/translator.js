@@ -112,26 +112,54 @@ async function translateSlide(file) {
     errorSection.style.display = 'none';
     resultSection.style.display = 'none';
 
-    // Simulate progress steps
+    // Calculate estimated time based on file size
+    const fileSizeMB = file.size / (1024 * 1024);
+    const isLargeFile = fileSizeMB > 5;
+
+    // Adjust timing based on file size (larger files = slower steps)
+    const baseStepDuration = isLargeFile ? 2500 : 1800;
+
+    // Enhanced progress steps with more detail
     const steps = [
-        { progress: 20, text: 'Parsing slide structure...' },
-        { progress: 40, text: 'Building context map...' },
-        { progress: 60, text: 'Translating with AI...' },
-        { progress: 80, text: 'Converting to RTL layout...' },
-        { progress: 95, text: 'Finalizing translation...' }
+        { progress: 5, text: 'Initializing translation... Please be patient', duration: 500 },
+        { progress: 15, text: 'Uploading file to server...', duration: baseStepDuration * 0.5 },
+        { progress: 25, text: 'Parsing slide structure and extracting text...', duration: baseStepDuration * 0.8 },
+        { progress: 40, text: 'Building context map and analyzing hierarchy...', duration: baseStepDuration * 0.6 },
+        { progress: 55, text: 'Translating with AI (this may take a moment)...', duration: baseStepDuration * 1.5 },
+        { progress: 70, text: 'Processing translations and formatting...', duration: baseStepDuration * 0.7 },
+        { progress: 80, text: 'Converting layout to RTL (Right-to-Left)...', duration: baseStepDuration * 0.8 },
+        { progress: 90, text: 'Translating layout backgrounds...', duration: baseStepDuration * 1.2 },
+        { progress: 95, text: 'Finalizing and packaging output file...', duration: baseStepDuration * 0.5 }
     ];
+
+    // Add patience message for large files
+    if (isLargeFile) {
+        const patientMsg = document.createElement('p');
+        patientMsg.className = 'patience-message';
+        patientMsg.style.cssText = 'color: #666; font-size: 14px; margin-top: 10px; font-style: italic;';
+        patientMsg.textContent = `⏱️ Large file detected (${fileSizeMB.toFixed(1)} MB). Translation may take 30-60 seconds. Thank you for your patience!`;
+        progressSection.appendChild(patientMsg);
+    }
 
     let currentStep = 0;
 
-    // Start progress animation
-    const progressInterval = setInterval(() => {
+    // Start progress animation with dynamic timing
+    function updateProgress() {
         if (currentStep < steps.length) {
             const step = steps[currentStep];
             progressFill.style.width = step.progress + '%';
             progressText.textContent = step.text;
             currentStep++;
+
+            // Schedule next step with its specific duration
+            if (currentStep < steps.length) {
+                setTimeout(updateProgress, steps[currentStep].duration);
+            }
         }
-    }, 1500);
+    }
+
+    // Start the progress animation
+    updateProgress();
 
     try {
         // Create form data
@@ -144,8 +172,7 @@ async function translateSlide(file) {
             body: formData
         });
 
-        clearInterval(progressInterval);
-
+        // Translation completed successfully
         if (!response.ok) {
             const errorData = await response.json();
             throw new Error(errorData.message || 'Translation failed');
@@ -157,7 +184,11 @@ async function translateSlide(file) {
 
         // Complete progress
         progressFill.style.width = '100%';
-        progressText.textContent = 'Translation complete!';
+        progressText.textContent = 'Translation complete! ✓';
+
+        // Remove patience message if exists
+        const patientMsg = document.querySelector('.patience-message');
+        if (patientMsg) patientMsg.remove();
 
         // Show result
         setTimeout(() => {
@@ -167,7 +198,6 @@ async function translateSlide(file) {
         }, 1000);
 
     } catch (error) {
-        clearInterval(progressInterval);
         console.error('Translation error:', error);
 
         // Show error
@@ -187,4 +217,8 @@ function resetUploader() {
     resultSection.style.display = 'none';
     errorSection.style.display = 'none';
     progressFill.style.width = '0%';
+
+    // Remove patience message if exists
+    const patientMsg = document.querySelector('.patience-message');
+    if (patientMsg) patientMsg.remove();
 }

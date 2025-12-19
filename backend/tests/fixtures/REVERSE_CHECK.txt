@@ -1,8 +1,0 @@
-CHECKING IF TRANSLATION IS REVERSED
-
-Translation from LLM:
-تم تقييم عدة شركات بناءً على إنجازاتها التكنولوجية والمالية
-
-Character count: 59
-First 5 chars: تم تق
-Last 5 chars: مالية

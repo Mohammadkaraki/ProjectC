@@ -34,6 +34,7 @@ def translate_with_openai(
 ) -> Dict[str, Any]:
     """
     Translate slide content using OpenAI with context awareness
+    OPTIMIZED: Uses ONE API call per slide instead of multiple calls
 
     Args:
         slide_structure: Slide structure from slide_parser
@@ -52,72 +53,159 @@ def translate_with_openai(
             ]
         }
     """
-    logger.info(f"Starting translation from {source_lang} to {target_lang}")
-
-    translations = {}
+    logger.info(f"Starting OPTIMIZED translation from {source_lang} to {target_lang}")
 
     try:
-        # Group elements by type for batch translation
-        title_elements = []
-        text_elements = []
-        bullet_groups = []
+        # Build structured input for single API call
+        elements_to_translate = {}
 
         for element in slide_structure["elements"]:
             element_id = element["element_id"]
             element_type = element["type"]
 
             if element_type == "title":
-                title_elements.append((element_id, element))
+                text = element.get("text", "")
+                if text:
+                    elements_to_translate[element_id] = {
+                        "type": "title",
+                        "text": text
+                    }
             elif element_type == "bullet_group":
-                bullet_groups.append((element_id, element))
+                bullets = element.get("bullets", [])
+                if bullets:
+                    elements_to_translate[element_id] = {
+                        "type": "bullets",
+                        "items": [b["text"] for b in bullets]
+                    }
             else:
-                text_elements.append((element_id, element))
+                text = element.get("text", "")
+                if text:
+                    elements_to_translate[element_id] = {
+                        "type": "text",
+                        "text": text
+                    }
 
-        # Translate titles
-        for element_id, element in title_elements:
-            text = element.get("text", "")
-            if text:
-                translation = _translate_single_text(
-                    text,
-                    "slide title",
-                    source_lang,
-                    target_lang,
-                    "Professional, impactful title for executive presentation"
-                )
-                translations[element_id] = translation
+        if not elements_to_translate:
+            logger.info("No elements to translate")
+            return {}
 
-        # Translate text elements
-        for element_id, element in text_elements:
-            text = element.get("text", "")
-            if text:
-                role = context_map.get(element_id, {}).get("role", "text")
-                translation = _translate_single_text(
-                    text,
-                    role,
-                    source_lang,
-                    target_lang,
-                    "Professional consulting language"
-                )
-                translations[element_id] = translation
+        # Make SINGLE API call to translate ALL elements
+        logger.info(f"Translating {len(elements_to_translate)} elements in ONE API call")
+        translations = _translate_slide_batch(
+            elements_to_translate,
+            source_lang,
+            target_lang
+        )
 
-        # Translate bullet groups
-        for element_id, element in bullet_groups:
-            bullets = element.get("bullets", [])
-            if bullets:
-                bullet_texts = [b["text"] for b in bullets]
-                translated_bullets = _translate_bullet_list(
-                    bullet_texts,
-                    source_lang,
-                    target_lang
-                )
-                translations[element_id] = translated_bullets
-
-        logger.info(f"Translation complete. Translated {len(translations)} elements")
+        logger.info(f"Translation complete. Translated {len(translations)} elements with 1 API call")
         return translations
 
     except Exception as e:
         logger.error(f"Translation error: {str(e)}", exc_info=True)
         raise
+
+def _translate_slide_batch(
+    elements: Dict[str, Any],
+    source_lang: str,
+    target_lang: str
+) -> Dict[str, Any]:
+    """
+    Translate ALL elements from a slide in a SINGLE API call using JSON mode
+
+    Args:
+        elements: Dict mapping element_id to element data
+            {
+                "shape_0": {"type": "title", "text": "Our Strategy"},
+                "shape_1": {"type": "text", "text": "Key findings"},
+                "shape_2": {"type": "bullets", "items": ["Point 1", "Point 2"]}
+            }
+        source_lang: Source language
+        target_lang: Target language
+
+    Returns:
+        Dict mapping element_id to translated content
+            {
+                "shape_0": "استراتيجيتنا",
+                "shape_1": "النتائج الرئيسية",
+                "shape_2": ["النقطة 1", "النقطة 2"]
+            }
+    """
+    # Build structured prompt with all elements
+    elements_list = []
+    for element_id, element_data in elements.items():
+        if element_data["type"] == "bullets":
+            elements_list.append({
+                "id": element_id,
+                "type": "bullets",
+                "content": element_data["items"]
+            })
+        else:
+            elements_list.append({
+                "id": element_id,
+                "type": element_data["type"],
+                "content": element_data["text"]
+            })
+
+    system_prompt = f"""You are a professional translator specializing in consulting and business presentations.
+Translate from {source_lang} to {target_lang} while maintaining:
+- Professional consulting tone and terminology
+- Cultural appropriateness for MENA business audiences
+- Concise, impactful language suitable for executive presentations
+- Appropriate formality based on element type (titles are bold/impactful, body text is clear/professional)"""
+
+    user_prompt = f"""Translate ALL elements from this slide from {source_lang} to {target_lang}.
+
+Elements to translate:
+{json.dumps(elements_list, ensure_ascii=False, indent=2)}
+
+Return a JSON object with this exact structure:
+{{
+  "translations": {{
+    "element_id_1": "translated text or array of translated items",
+    "element_id_2": "translated text or array of translated items"
+  }}
+}}
+
+Requirements:
+- For "title" type: Translate as impactful, professional title
+- For "text" type: Translate as clear, professional body text
+- For "bullets" type: Return array of translated bullet points maintaining parallel structure
+- Preserve the element IDs exactly as given
+- Return ONLY the JSON object, no additional text"""
+
+    try:
+        response = get_openai_client().chat.completions.create(
+            model=Config.OPENAI_MODEL,
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt}
+            ],
+            temperature=Config.TRANSLATION_TEMPERATURE,
+            max_tokens=Config.MAX_TOKENS,
+            response_format={"type": "json_object"}
+        )
+
+        content = response.choices[0].message.content.strip()
+        result = json.loads(content)
+
+        # Extract translations
+        translations = result.get("translations", {})
+
+        # Validate we got all translations
+        missing = set(elements.keys()) - set(translations.keys())
+        if missing:
+            logger.warning(f"Missing translations for: {missing}")
+            # Fill in missing with placeholder
+            for element_id in missing:
+                translations[element_id] = "[Translation missing]"
+
+        logger.info(f"Batch translated {len(translations)} elements successfully")
+        return translations
+
+    except Exception as e:
+        logger.error(f"Batch translation error: {str(e)}")
+        # Fallback: return error markers
+        return {element_id: "[ERROR: Translation failed]" for element_id in elements.keys()}
 
 def _translate_single_text(
     text: str,

@@ -1,9 +1,0 @@
-Has English "Recommendation": False
-
-All layout text:
-  - انقر لتحرير نمط العنوان الرئيسي
-  - "نظرة عامة"
-  - "التوصية"
-  - تأثير
-  - "مخاطر"
-  - "تحليل"

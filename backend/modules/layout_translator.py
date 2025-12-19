@@ -19,6 +19,75 @@ from modules.llm_translator import _translate_single_text
 
 logger = setup_logger(__name__)
 
+def _batch_translate_layout_texts(
+    texts: List[str],
+    source_lang: str,
+    target_lang: str
+) -> List[str]:
+    """
+    Batch translate multiple layout texts in ONE API call
+
+    Args:
+        texts: List of text strings to translate
+        source_lang: Source language
+        target_lang: Target language
+
+    Returns:
+        List of translated strings in same order
+    """
+    from modules.llm_translator import get_openai_client
+    import json
+
+    if not texts:
+        return []
+
+    # Build prompt for batch translation
+    numbered_texts = "\n".join([f"{i+1}. {text}" for i, text in enumerate(texts)])
+
+    system_prompt = f"""You are a professional translator for PowerPoint slide layouts and templates.
+Translate from {source_lang} to {target_lang} while maintaining professional business tone."""
+
+    user_prompt = f"""Translate these layout/background texts from {source_lang} to {target_lang}:
+
+{numbered_texts}
+
+Return ONLY a JSON object with this structure:
+{{
+  "translations": ["translation 1", "translation 2", ...]
+}}
+
+Preserve the order. Return ONLY the JSON, no additional text."""
+
+    try:
+        response = get_openai_client().chat.completions.create(
+            model=Config.OPENAI_MODEL,
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt}
+            ],
+            temperature=Config.TRANSLATION_TEMPERATURE,
+            max_tokens=Config.MAX_TOKENS,
+            response_format={"type": "json_object"}
+        )
+
+        content = response.choices[0].message.content.strip()
+        result = json.loads(content)
+        translations = result.get("translations", [])
+
+        # Ensure we have the same number
+        if len(translations) != len(texts):
+            logger.warning(f"Translation count mismatch: expected {len(texts)}, got {len(translations)}")
+            # Pad with originals if missing
+            while len(translations) < len(texts):
+                translations.append(texts[len(translations)])
+
+        return translations[:len(texts)]
+
+    except Exception as e:
+        logger.error(f"Batch layout translation error: {str(e)}")
+        # Fallback: return originals
+        return texts
+
 def translate_slide_layouts(pptx_path: str, output_path: str) -> None:
     """
     Translate text in slide layouts (background graphics)
@@ -70,7 +139,8 @@ def translate_slide_layouts(pptx_path: str, output_path: str) -> None:
 
 def _translate_layout_file(layout_xml_path: str) -> None:
     """
-    Translate text elements and flip shapes to RTL in a single layout XML file
+    Translate text elements in a layout XML file
+    OPTIMIZED: Batches all layout text into ONE API call
 
     Args:
         layout_xml_path: Path to slideLayout XML file
@@ -81,19 +151,17 @@ def _translate_layout_file(layout_xml_path: str) -> None:
     with open(layout_xml_path, 'r', encoding='utf-8') as f:
         xml_content = f.read()
 
-    # STEP 1: REMOVED - Layout shape flipping disabled per user request
-    # xml_content = _flip_layout_shapes_rtl(xml_content)
-
     # Find all text elements with <a:t>text</a:t>
-    # Pattern: <a:t>Text to translate</a:t>
     pattern = r'<a:t>([^<]+)</a:t>'
-    matches = re.finditer(pattern, xml_content)
+    matches = list(re.finditer(pattern, xml_content))
 
-    translations = {}
+    # Collect all texts to translate
+    texts_to_translate = []
+    text_map = {}  # Map index to original text with spaces
 
-    for match in matches:
-        original_with_spaces = match.group(1)  # Keep original with spaces
-        original_text = original_with_spaces.strip()  # Stripped for translation
+    for idx, match in enumerate(matches):
+        original_with_spaces = match.group(1)
+        original_text = original_with_spaces.strip()
 
         # Skip empty, numbers, or very short text
         if not original_text or len(original_text) < 2:
@@ -103,20 +171,32 @@ def _translate_layout_file(layout_xml_path: str) -> None:
         if any('\u0600' <= c <= '\u06FF' for c in original_text):
             continue
 
-        # Translate
-        try:
-            translated = _translate_single_text(
-                original_text,
-                "layout_text",
-                Config.SOURCE_LANGUAGE,
-                Config.TARGET_LANGUAGE,
-                "Layout/background text for slide template"
-            )
-            # Store with original spaces for XML matching
+        texts_to_translate.append(original_text)
+        text_map[len(texts_to_translate) - 1] = original_with_spaces
+
+    if not texts_to_translate:
+        logger.info("  No text to translate in this layout")
+        return
+
+    # BATCH TRANSLATE: All texts in ONE API call
+    logger.info(f"  Translating {len(texts_to_translate)} text elements in ONE API call...")
+    try:
+        translated_list = _batch_translate_layout_texts(
+            texts_to_translate,
+            Config.SOURCE_LANGUAGE,
+            Config.TARGET_LANGUAGE
+        )
+
+        # Build translations dict
+        translations = {}
+        for idx, translated in enumerate(translated_list):
+            original_with_spaces = text_map[idx]
             translations[original_with_spaces] = translated
-            logger.info(f"  Translated: '{original_text}' -> '{translated}'")
-        except Exception as e:
-            logger.warning(f"  Failed to translate '{original_text}': {str(e)}")
+            logger.info(f"  ✓ '{original_with_spaces.strip()[:50]}...' -> '{translated[:50]}...'")
+
+    except Exception as e:
+        logger.error(f"  Batch translation failed: {str(e)}")
+        return
 
     # Replace in XML
     for original, translated in translations.items():
