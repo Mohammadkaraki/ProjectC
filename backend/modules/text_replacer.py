@@ -146,8 +146,9 @@ def _replace_single_text(shape, translation: str) -> None:
         if text_frame.paragraphs:
             first_para = text_frame.paragraphs[0]
 
-            # Save paragraph-level formatting
+            # Save paragraph-level formatting (including alignment!)
             original_para_formatting = {
+                'alignment': first_para.alignment,  # ✅ PRESERVE original alignment (CENTER for circles!)
                 'line_spacing': first_para.line_spacing,
                 'space_before': first_para.space_before,
                 'space_after': first_para.space_after,
@@ -165,37 +166,82 @@ def _replace_single_text(shape, translation: str) -> None:
                     'color': first_run.font.color.rgb if first_run.font.color and hasattr(first_run.font.color, 'rgb') else None
                 }
 
-        # Clear and add new paragraph with run
+        # PRESERVE original margins, word wrap, and auto-size (DON'T add margins to circles!)
+        try:
+            original_margin_left = text_frame.margin_left
+        except:
+            original_margin_left = None
+        try:
+            original_margin_right = text_frame.margin_right
+        except:
+            original_margin_right = None
+        try:
+            original_margin_top = text_frame.margin_top
+        except:
+            original_margin_top = None
+        try:
+            original_margin_bottom = text_frame.margin_bottom
+        except:
+            original_margin_bottom = None
+
+        original_word_wrap = text_frame.word_wrap
+        original_auto_size = text_frame.auto_size
+
+        # PRESERVE VERTICAL ALIGNMENT (text anchor) - CRITICAL for "Cost Breakdown" positioning!
+        try:
+            original_vertical_anchor = text_frame.vertical_anchor
+        except:
+            original_vertical_anchor = None
+
+        # Clear text (keeps first empty paragraph to reuse)
         text_frame.clear()
 
-        # FIX: Enable word wrap to prevent text overflow
-        text_frame.word_wrap = True
+        # RESTORE original settings - DON'T add defaults if they were unset
+        # This is CRITICAL for circles that have no margins!
+        if original_word_wrap is not None:
+            text_frame.word_wrap = original_word_wrap
 
-        # FIX: Auto-shrink text to fit shape (better for Arabic)
-        from pptx.enum.text import MSO_AUTO_SIZE
-        text_frame.auto_size = MSO_AUTO_SIZE.TEXT_TO_FIT_SHAPE
+        if original_auto_size is not None:
+            text_frame.auto_size = original_auto_size
 
-        # FIX: Optimal margins for Arabic text (smaller = more space)
-        from pptx.util import Inches
-        text_frame.margin_left = Inches(0.03)
-        text_frame.margin_right = Inches(0.03)
-        text_frame.margin_top = Inches(0.03)
-        text_frame.margin_bottom = Inches(0.03)
+        # RESTORE VERTICAL ALIGNMENT - prevents text from shifting down!
+        if original_vertical_anchor is not None:
+            text_frame.vertical_anchor = original_vertical_anchor
 
-        paragraph = text_frame.add_paragraph()
+        # RESTORE original margins with SLIGHT ADJUSTMENT for Arabic text positioning
+        # Arabic text renders slightly lower due to different font metrics, so we reduce top margin
+        if original_margin_left is not None:
+            text_frame.margin_left = original_margin_left
+        if original_margin_right is not None:
+            text_frame.margin_right = original_margin_right
+        if original_margin_top is not None:
+            # Reduce top margin by ~15% to shift Arabic text upward
+            adjusted_margin_top = int(original_margin_top * 0.85) if original_margin_top > 0 else original_margin_top
+            text_frame.margin_top = adjusted_margin_top
+        if original_margin_bottom is not None:
+            text_frame.margin_bottom = original_margin_bottom
+
+        # Use existing first paragraph (clear() leaves one empty paragraph)
+        # DON'T add new paragraph to avoid extra empty paragraph!
+        paragraph = text_frame.paragraphs[0]
 
         # Create run and set text (this ensures we have a run to format)
         run = paragraph.add_run()
         run.text = translation
 
-        # Maintain RIGHT alignment (no RTL attribute to avoid text reversal)
+        # PRESERVE original alignment OR default to RIGHT for RTL
         from pptx.enum.text import PP_ALIGN
-        paragraph.alignment = PP_ALIGN.RIGHT
+        if original_para_formatting.get('alignment') is not None:
+            # Keep original alignment (e.g., CENTER for numbers in circles!)
+            paragraph.alignment = original_para_formatting['alignment']
+        else:
+            # Default to RIGHT for RTL text
+            paragraph.alignment = PP_ALIGN.RIGHT
 
         # NOTE: We do NOT set rtl="1" because Arabic text from LLM is already
         # in correct logical order. Setting rtl="1" would reverse it again.
 
-        # Restore paragraph-level formatting
+        # Restore paragraph-level formatting (alignment already set above)
         if original_para_formatting:
             if original_para_formatting.get('line_spacing') is not None:
                 paragraph.line_spacing = original_para_formatting['line_spacing']
@@ -275,6 +321,7 @@ def _replace_bullets(shape, translations: List[str]) -> None:
                     'level': paragraph.level,
                     'formatting': {},
                     'para_formatting': {
+                        'alignment': paragraph.alignment,  # ✅ PRESERVE alignment
                         'line_spacing': paragraph.line_spacing,
                         'space_before': paragraph.space_before,
                         'space_after': paragraph.space_after,
@@ -299,22 +346,46 @@ def _replace_bullets(shape, translations: List[str]) -> None:
         while len(original_data) < len(translations):
             original_data.append({'level': 0, 'formatting': {}, 'para_formatting': {}})
 
+        # PRESERVE original margins, word wrap, and auto-size (same as single text)
+        try:
+            original_margin_left = text_frame.margin_left
+        except:
+            original_margin_left = None
+        try:
+            original_margin_right = text_frame.margin_right
+        except:
+            original_margin_right = None
+        try:
+            original_margin_top = text_frame.margin_top
+        except:
+            original_margin_top = None
+        try:
+            original_margin_bottom = text_frame.margin_bottom
+        except:
+            original_margin_bottom = None
+
+        original_word_wrap = text_frame.word_wrap
+        original_auto_size = text_frame.auto_size
+
         # Clear existing content
         text_frame.clear()
 
-        # FIX: Enable word wrap to prevent text overflow
-        text_frame.word_wrap = True
+        # RESTORE original settings - DON'T add defaults if they were unset
+        if original_word_wrap is not None:
+            text_frame.word_wrap = original_word_wrap
 
-        # FIX: Auto-shrink text to fit shape (better for Arabic)
-        from pptx.enum.text import MSO_AUTO_SIZE
-        text_frame.auto_size = MSO_AUTO_SIZE.TEXT_TO_FIT_SHAPE
+        if original_auto_size is not None:
+            text_frame.auto_size = original_auto_size
 
-        # FIX: Optimal margins for Arabic text (smaller = more space)
-        from pptx.util import Inches
-        text_frame.margin_left = Inches(0.03)
-        text_frame.margin_right = Inches(0.03)
-        text_frame.margin_top = Inches(0.03)
-        text_frame.margin_bottom = Inches(0.03)
+        # RESTORE original margins EXACTLY
+        if original_margin_left is not None:
+            text_frame.margin_left = original_margin_left
+        if original_margin_right is not None:
+            text_frame.margin_right = original_margin_right
+        if original_margin_top is not None:
+            text_frame.margin_top = original_margin_top
+        if original_margin_bottom is not None:
+            text_frame.margin_bottom = original_margin_bottom
 
         # Add translated bullets with original hierarchy and formatting
         for i, translation_text in enumerate(translations):
@@ -326,14 +397,19 @@ def _replace_bullets(shape, translations: List[str]) -> None:
 
             paragraph.level = original_data[i]['level'] if i < len(original_data) else 0
 
-            # Maintain RIGHT alignment (no RTL attribute to avoid text reversal)
+            # PRESERVE original alignment OR default to RIGHT for RTL
             from pptx.enum.text import PP_ALIGN
-            paragraph.alignment = PP_ALIGN.RIGHT
+            if original_data[i]['para_formatting'].get('alignment') is not None:
+                # Keep original alignment
+                paragraph.alignment = original_data[i]['para_formatting']['alignment']
+            else:
+                # Default to RIGHT for RTL bullets
+                paragraph.alignment = PP_ALIGN.RIGHT
 
             # NOTE: We do NOT set rtl="1" because Arabic text from LLM is already
             # in correct logical order. Setting rtl="1" would reverse it again.
 
-            # Restore paragraph-level formatting
+            # Restore paragraph-level formatting (alignment already set above)
             if original_data[i]['para_formatting']:
                 para_fmt = original_data[i]['para_formatting']
                 if para_fmt.get('line_spacing') is not None:

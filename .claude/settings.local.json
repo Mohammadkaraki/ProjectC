@@ -4,7 +4,9 @@
       "WebSearch",
       "Bash(python -m pip install:*)",
       "Bash(npx create-next-app:*)",
-      "Bash(python:*)"
+      "Bash(python:*)",
+      "Bash(git add:*)",
+      "Bash(git checkout:*)"
     ],
     "deny": [],
     "ask": []

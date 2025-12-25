@@ -90,10 +90,10 @@ def extract_slide_structure(pptx_path: str, slide_index: int = 0) -> Dict[str, A
                                 "text": text,
                                 "shape_id": getattr(shape, 'shape_id', 0),
                                 "position": {
-                                    "left": shape.left,
-                                    "top": shape.top,
-                                    "width": shape.width,
-                                    "height": shape.height
+                                    "left": shape.left if shape.left is not None else 0,
+                                    "top": shape.top if shape.top is not None else 0,
+                                    "width": shape.width if shape.width is not None else 0,
+                                    "height": shape.height if shape.height is not None else 0
                                 },
                                 "level": 0
                             })
@@ -119,10 +119,10 @@ def extract_slide_structure(pptx_path: str, slide_index: int = 0) -> Dict[str, A
                         "bullets": bullets,
                         "shape_id": getattr(shape, 'shape_id', 0),
                         "position": {
-                            "left": shape.left,
-                            "top": shape.top,
-                            "width": shape.width,
-                            "height": shape.height
+                            "left": shape.left if shape.left is not None else 0,
+                            "top": shape.top if shape.top is not None else 0,
+                            "width": shape.width if shape.width is not None else 0,
+                            "height": shape.height if shape.height is not None else 0
                         }
                     })
             else:
@@ -138,10 +138,10 @@ def extract_slide_structure(pptx_path: str, slide_index: int = 0) -> Dict[str, A
                         "text": text,
                         "shape_id": getattr(shape, 'shape_id', 0),
                         "position": {
-                            "left": shape.left,
-                            "top": shape.top,
-                            "width": shape.width,
-                            "height": shape.height
+                            "left": shape.left if shape.left is not None else 0,
+                            "top": shape.top if shape.top is not None else 0,
+                            "width": shape.width if shape.width is not None else 0,
+                            "height": shape.height if shape.height is not None else 0
                         },
                         "level": 0
                     })
@@ -187,7 +187,8 @@ def _determine_element_type(shape, shape_idx: int) -> str:
             return "bullet_group"
 
     # Check position to determine if it's a header (near top)
-    if shape_idx <= 1 and shape.top < 2000000:  # Near top (measured in EMUs)
+    # Skip if shape.top is None (can happen with certain shape types)
+    if shape_idx <= 1 and shape.top is not None and shape.top < 2000000:  # Near top (measured in EMUs)
         return "header"
 
     # Default to text_box

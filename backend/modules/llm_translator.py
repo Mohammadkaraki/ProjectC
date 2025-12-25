@@ -1,6 +1,6 @@
 """
 LLM Translator Module
-Handles translation using OpenAI GPT-4 with context-aware prompts
+Handles translation using OpenAI GPT-4 or Google Gemini with context-aware prompts
 """
 from openai import OpenAI
 import json
@@ -17,14 +17,25 @@ from utils.logger import setup_logger
 logger = setup_logger(__name__)
 
 # OpenAI client (initialized lazily)
-_client = None
+_openai_client = None
+_gemini_model = None
 
 def get_openai_client():
     """Get or create OpenAI client instance"""
-    global _client
-    if _client is None:
-        _client = OpenAI(api_key=Config.OPENAI_API_KEY)
-    return _client
+    global _openai_client
+    if _openai_client is None:
+        _openai_client = OpenAI(api_key=Config.OPENAI_API_KEY)
+    return _openai_client
+
+def get_gemini_model():
+    """Get or create Gemini model instance"""
+    global _gemini_model
+    if _gemini_model is None:
+        from google import genai
+        from google.genai import types
+        client = genai.Client(api_key=Config.GEMINI_API_KEY)
+        _gemini_model = client
+    return _gemini_model
 
 def translate_with_openai(
     slide_structure: Dict[str, Any],
@@ -33,7 +44,7 @@ def translate_with_openai(
     target_lang: str = "Arabic"
 ) -> Dict[str, Any]:
     """
-    Translate slide content using OpenAI with context awareness
+    Translate slide content using configured LLM provider (OpenAI or Gemini)
     OPTIMIZED: Uses ONE API call per slide instead of multiple calls
 
     Args:
@@ -53,7 +64,8 @@ def translate_with_openai(
             ]
         }
     """
-    logger.info(f"Starting OPTIMIZED translation from {source_lang} to {target_lang}")
+    provider = Config.LLM_PROVIDER.lower()
+    logger.info(f"Starting OPTIMIZED translation from {source_lang} to {target_lang} using {provider.upper()}")
 
     try:
         # Build structured input for single API call
@@ -91,11 +103,20 @@ def translate_with_openai(
 
         # Make SINGLE API call to translate ALL elements
         logger.info(f"Translating {len(elements_to_translate)} elements in ONE API call")
-        translations = _translate_slide_batch(
-            elements_to_translate,
-            source_lang,
-            target_lang
-        )
+
+        # Route to the correct provider
+        if provider == "gemini":
+            translations = _translate_slide_batch_gemini(
+                elements_to_translate,
+                source_lang,
+                target_lang
+            )
+        else:  # Default to OpenAI
+            translations = _translate_slide_batch_openai(
+                elements_to_translate,
+                source_lang,
+                target_lang
+            )
 
         logger.info(f"Translation complete. Translated {len(translations)} elements with 1 API call")
         return translations
@@ -104,13 +125,13 @@ def translate_with_openai(
         logger.error(f"Translation error: {str(e)}", exc_info=True)
         raise
 
-def _translate_slide_batch(
+def _translate_slide_batch_openai(
     elements: Dict[str, Any],
     source_lang: str,
     target_lang: str
 ) -> Dict[str, Any]:
     """
-    Translate ALL elements from a slide in a SINGLE API call using JSON mode
+    Translate ALL elements from a slide in a SINGLE OpenAI API call using JSON mode
 
     Args:
         elements: Dict mapping element_id to element data
@@ -204,6 +225,109 @@ Requirements:
 
     except Exception as e:
         logger.error(f"Batch translation error: {str(e)}")
+        # Fallback: return error markers
+        return {element_id: "[ERROR: Translation failed]" for element_id in elements.keys()}
+
+def _translate_slide_batch_gemini(
+    elements: Dict[str, Any],
+    source_lang: str,
+    target_lang: str
+) -> Dict[str, Any]:
+    """
+    Translate ALL elements from a slide in a SINGLE Gemini API call
+
+    Args:
+        elements: Dict mapping element_id to element data
+        source_lang: Source language
+        target_lang: Target language
+
+    Returns:
+        Dict mapping element_id to translated content
+    """
+    # Build structured prompt with all elements
+    elements_list = []
+    for element_id, element_data in elements.items():
+        if element_data["type"] == "bullets":
+            elements_list.append({
+                "id": element_id,
+                "type": "bullets",
+                "content": element_data["items"]
+            })
+        else:
+            elements_list.append({
+                "id": element_id,
+                "type": element_data["type"],
+                "content": element_data["text"]
+            })
+
+    prompt = f"""You are a professional translator specializing in consulting and business presentations.
+Translate from {source_lang} to {target_lang} while maintaining:
+- Professional consulting tone and terminology
+- Cultural appropriateness for MENA business audiences
+- Concise, impactful language suitable for executive presentations
+- Appropriate formality based on element type (titles are bold/impactful, body text is clear/professional)
+
+Translate ALL elements from this slide from {source_lang} to {target_lang}.
+
+Elements to translate:
+{json.dumps(elements_list, ensure_ascii=False, indent=2)}
+
+Return a JSON object with this exact structure:
+{{
+  "translations": {{
+    "element_id_1": "translated text or array of translated items",
+    "element_id_2": "translated text or array of translated items"
+  }}
+}}
+
+Requirements:
+- For "title" type: Translate as impactful, professional title
+- For "text" type: Translate as clear, professional body text
+- For "bullets" type: Return array of translated bullet points maintaining parallel structure
+- Preserve the element IDs exactly as given
+- Return ONLY the JSON object, no additional text"""
+
+    try:
+        # Configure generation settings
+        from google.genai import types
+
+        config = types.GenerateContentConfig(
+            temperature=Config.TRANSLATION_TEMPERATURE,
+            max_output_tokens=Config.MAX_TOKENS,
+        )
+
+        response = get_gemini_model().models.generate_content(
+            model=Config.GEMINI_MODEL,
+            contents=prompt,
+            config=config
+        )
+
+        content = response.text.strip()
+
+        # Extract JSON from markdown code blocks if present
+        if "```json" in content:
+            content = content.split("```json")[1].split("```")[0].strip()
+        elif "```" in content:
+            content = content.split("```")[1].split("```")[0].strip()
+
+        result = json.loads(content)
+
+        # Extract translations
+        translations = result.get("translations", {})
+
+        # Validate we got all translations
+        missing = set(elements.keys()) - set(translations.keys())
+        if missing:
+            logger.warning(f"Missing translations for: {missing}")
+            # Fill in missing with placeholder
+            for element_id in missing:
+                translations[element_id] = "[Translation missing]"
+
+        logger.info(f"Batch translated {len(translations)} elements successfully with Gemini")
+        return translations
+
+    except Exception as e:
+        logger.error(f"Gemini batch translation error: {str(e)}")
         # Fallback: return error markers
         return {element_id: "[ERROR: Translation failed]" for element_id in elements.keys()}
 

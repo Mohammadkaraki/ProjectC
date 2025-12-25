@@ -14,11 +14,14 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from modules.slide_parser import extract_slide_structure
 from modules.context_builder import build_context_map
 from modules.llm_translator import translate_with_openai
-from modules.rtl_converter import flip_to_rtl_layout
+from modules.rtl_converter import flip_to_rtl_layout, group_chart_elements
 from modules.text_replacer import replace_text_in_slide
+from modules.chart_translator import translate_charts_in_pptx
+from modules.chart_collision_fixer import fix_chart_collisions_option_c
 from modules.layout_translator import translate_slide_layouts
 from config import Config
 from utils.logger import setup_logger
+from pptx import Presentation
 
 logger = setup_logger(__name__)
 
@@ -75,7 +78,7 @@ def translate_all_slides(input_path: str, output_path: str):
     all_slides_data = [None] * slide_count  # Pre-allocate list
 
     # Use ThreadPoolExecutor for parallel processing
-    max_workers = min(slide_count, 10)  # Max 10 parallel threads
+    max_workers = min(slide_count, 5)  # Max 5 parallel threads
     logger.info(f"Using {max_workers} parallel workers")
 
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
@@ -94,12 +97,35 @@ def translate_all_slides(input_path: str, output_path: str):
     parallel_time = time.time() - overall_start
     logger.info(f"\n✓ All {slide_count} slides processed in {parallel_time:.1f}s (parallel)")
 
-    # Step 4: Convert to RTL (all slides at once)
+    # Step 4: Group chart elements (before RTL conversion)
+    logger.info("\nGrouping chart-related elements on chart slides...")
+    prs = Presentation(input_path)
+    total_groups = 0
+    for slide_idx, slide in enumerate(prs.slides):
+        groups_created = group_chart_elements(slide)
+        if groups_created > 0:
+            logger.info(f"  Slide {slide_idx + 1}: Created {groups_created} group(s)")
+            total_groups += groups_created
+
+    # Save the presentation with grouped charts
+    grouped_temp = output_path.replace('.pptx', '_grouped_temp.pptx')
+    prs.save(grouped_temp)
+    logger.info(f"Created {total_groups} total chart group(s)")
+
+    # Step 5: Convert to RTL (all slides - normal conversion)
     logger.info("\nConverting to RTL layout...")
     rtl_temp = output_path.replace('.pptx', '_rtl_temp.pptx')
-    flip_to_rtl_layout(input_path, rtl_temp)
+    flip_to_rtl_layout(grouped_temp, rtl_temp)
 
-    # Step 5: Replace text in ALL slides
+    # Step 5.5: Fix chart collisions (shift charts to avoid objects)
+    logger.info("\nFixing chart-to-object collisions...")
+    prs_rtl = Presentation(rtl_temp)
+    slide_width = prs_rtl.slide_width
+    fix_chart_collisions_option_c(prs_rtl, slide_width)
+    prs_rtl.save(rtl_temp)
+    logger.info("Chart collision fixes applied")
+
+    # Step 6: Replace text in ALL slides
     logger.info("\nReplacing text in all slides...")
     current_file = rtl_temp
 
@@ -117,7 +143,17 @@ def translate_all_slides(input_path: str, output_path: str):
             slide_idx
         )
 
-    # Step 6: Translate layouts
+    # Step 7: Translate charts
+    logger.info("\nTranslating chart text...")
+    chart_temp = output_path.replace('.pptx', '_chart_translated.pptx')
+    translate_charts_in_pptx(output_path, chart_temp,
+                            Config.SOURCE_LANGUAGE,
+                            Config.TARGET_LANGUAGE)
+    if os.path.exists(chart_temp):
+        os.remove(output_path)
+        os.rename(chart_temp, output_path)
+
+    # Step 8: Translate layouts
     logger.info("\nTranslating layout backgrounds...")
     layout_out = output_path.replace('.pptx', '_with_layouts.pptx')
     translate_slide_layouts(output_path, layout_out)
@@ -127,6 +163,8 @@ def translate_all_slides(input_path: str, output_path: str):
         os.rename(layout_out, output_path)
 
     # Cleanup
+    if os.path.exists(grouped_temp):
+        os.remove(grouped_temp)
     if os.path.exists(rtl_temp):
         os.remove(rtl_temp)
 
