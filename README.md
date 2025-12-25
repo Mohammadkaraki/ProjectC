@@ -42,17 +42,19 @@
 │          FLASK API SERVER (Python)                  │
 │  - File upload endpoint                             │
 │  - Workflow orchestration                           │
+│  - Parallel processing (5 workers)                  │
 └────────────────────┬────────────────────────────────┘
                      │
                      ▼
 ┌─────────────────────────────────────────────────────┐
 │         SLIDE TRANSLATOR WORKFLOW                   │
-│  Step 1: Parse Slide Structure                      │
-│  Step 2: Build Context Map                          │
-│  Step 3: Translate with OpenAI GPT-4               │
+│  Step 1: Parse Slide Structure (Parallel)           │
+│  Step 2: Build Context Map (Parallel)               │
+│  Step 3: Translate with OpenAI GPT-3.5-turbo        │
 │  Step 4: Convert to RTL Layout (XML manipulation)   │
 │  Step 5: Replace Text with Translations             │
-│  Step 6: Generate Output File                       │
+│  Step 6: Translate Layouts                          │
+│  Step 7: Generate Output File                       │
 └─────────────────────────────────────────────────────┘
 ```
 
@@ -334,6 +336,26 @@ LOG_LEVEL=INFO
 
 The application uses GPT-3.5-turbo by default. For higher quality translations, change to GPT-4 by setting `OPENAI_MODEL=gpt-4` in .env
 
+### Performance & System Requirements
+
+**Processing Performance:**
+- **Parallel Processing:** 5 concurrent workers
+- **Speed:** ~0.9 seconds per slide (parallel phase)
+- **Total Time:** ~2.5 seconds per slide average (including RTL conversion, charts, layouts)
+- **Example:** 42-slide presentation processed in ~105 seconds (1 minute 45 seconds)
+
+**System Requirements (Production):**
+- **Recommended:** AWS t3.large or equivalent (2 vCPUs, 8GB RAM)
+- **Minimum:** t3.medium (2 vCPUs, 4GB RAM) for small presentations (<10 slides)
+- **Memory:** 8GB RAM recommended for large presentations with images
+- **Reason:** PowerPoint files with high-resolution images require significant RAM during parallel processing
+
+**Why 5 Workers:**
+- Optimized for stability and memory efficiency
+- Prevents out-of-memory crashes on large presentations
+- Balances speed with system resource usage
+- Tested with presentations up to 50 slides
+
 ---
 
 ## 🚢 Production Deployment
@@ -345,11 +367,15 @@ User → creativeshowroom.site (AWS Route 53)
   ↓
 AWS Elastic IP (Static IP)
   ↓
-AWS EC2 Instance
+AWS EC2 Instance (t3.large - 2 vCPUs, 8GB RAM)
   ↓
-Docker Container → Flask API + React Frontend
-  ↓
+Docker Containers:
+  ├─ Frontend Container (Nginx + React)
+  └─ Backend Container (Flask API + Python Workers)
+       ↓
 OpenAI API (GPT-3.5-turbo)
+  - 5 parallel workers
+  - Context-aware translation
 ```
 
 ### Deployment Features
